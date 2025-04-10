@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">deftcontroller</string>
+    <string name="testing_string_resource">Testing string resource</string>
+    <string name="button_string">ButtonString</string>
+</resources>
