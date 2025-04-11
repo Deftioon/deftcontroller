@@ -46,9 +46,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.deftcontroller.ui.theme.DeftcontrollerTheme
 import kotlinx.coroutines.launch
-import com.example.deftcontroller.HomePageContent
-import com.example.deftcontroller.HomePageContentHidRawLog
-
 private const val TAG = "MainActivity"
 
 class MainActivity : ComponentActivity() {
@@ -132,16 +129,16 @@ fun MainContent(gamepadManager: GamepadManager? = null) {
     
     
     val context = LocalContext.current
-    
-    
-    val effectiveGamepadManager = gamepadManager ?: GamepadManager(context)
+
+
+    gamepadManager ?: GamepadManager(context)
 
     val navItems = listOf(
         NavigationItem("Home", Icons.Filled.Home, 0),
         NavigationItem("Settings", Icons.Filled.Settings, 1)
     )
 
-    var bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+    val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
     val bluetoothAdapter: BluetoothAdapter? = remember { bluetoothManager?.adapter }
 
     ModalNavigationDrawer(

@@ -50,7 +50,7 @@ fun MainComponent(bluetoothAdapter: BluetoothAdapter?) {
         mutableStateOf<String?>(null)
     }
 
-    var receiver = remember {
+    val receiver = remember {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
@@ -83,7 +83,7 @@ fun MainComponent(bluetoothAdapter: BluetoothAdapter?) {
                 } catch (e: SecurityException) {
                     errorMessage = "Bluetooth scan permission required"
                 } finally {
-                    bluetoothAdapter?.cancelDiscovery()
+                    bluetoothAdapter.cancelDiscovery()
                     scanning = false
                 }
             } else if (bluetoothAdapter == null) {

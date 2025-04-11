@@ -2,7 +2,6 @@ package com.example.deftcontroller.controller
 
 import android.content.Context
 import android.hardware.input.InputManager
-import android.os.Build
 import android.util.Log
 import android.view.InputDevice
 import android.view.KeyEvent
@@ -15,7 +14,7 @@ private const val TAG = "GamepadManager"
  * Manages gamepad connections and delegates input events to the GameController
  */
 class GamepadManager(
-    private val context: Context,
+    context: Context,
     private val controller: GameController = DefaultGameController()
 ) {
     
@@ -29,10 +28,8 @@ class GamepadManager(
     
     init {
         refreshConnectedGamepads()
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
-        }
+
+        inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
     }
 
     /**
@@ -125,11 +122,7 @@ class GamepadManager(
                 Log.d(TAG, "  Vendor ID: ${device.vendorId}, Product ID: ${device.productId}")
                 
                 val controllerNumber = device.controllerNumber
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    Log.d(TAG, "  Controller #: $controllerNumber, Descriptor: ${device.descriptor}")
-                } else {
-                    Log.d(TAG, "  Controller #: $controllerNumber")
-                }
+                Log.d(TAG, "  Controller #: $controllerNumber, Descriptor: ${device.descriptor}")
             }
         }
         Log.d(TAG, "================================")

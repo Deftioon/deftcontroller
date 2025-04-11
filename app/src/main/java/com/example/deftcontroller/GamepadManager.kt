@@ -2,11 +2,11 @@ package com.example.deftcontroller
 
 import android.content.Context
 import android.hardware.input.InputManager
-import android.os.Build
 import android.util.Log
 import android.view.InputDevice
 import android.view.KeyEvent
 import android.view.MotionEvent
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 
@@ -15,7 +15,7 @@ private const val TAG = "GamepadManager"
 /**
  * Manages gamepad connections and input events
  */
-class GamepadManager(private val context: Context) {
+class GamepadManager(context: Context) {
     
     companion object {
         val BUTTON_NAMES = mapOf(
@@ -37,28 +37,26 @@ class GamepadManager(private val context: Context) {
     }
 
     
-    val connectedGamepads = mutableStateListOf<InputDevice>()
-    val lastButtonPress = mutableStateOf<String?>(null)
-    val leftStick = mutableStateOf(Pair(0f, 0f))
-    val rightStick = mutableStateOf(Pair(0f, 0f))
-    val leftTrigger = mutableStateOf(0f)
-    val rightTrigger = mutableStateOf(0f)
+    private val connectedGamepads = mutableStateListOf<InputDevice>()
+    private val lastButtonPress = mutableStateOf<String?>(null)
+    private val leftStick = mutableStateOf(Pair(0f, 0f))
+    private val rightStick = mutableStateOf(Pair(0f, 0f))
+    private val leftTrigger = mutableFloatStateOf(0f)
+    private val rightTrigger = mutableFloatStateOf(0f)
 
     
     private var inputManager: InputManager? = null
     
     init {
         refreshConnectedGamepads()
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
-        }
+
+        inputManager = context.getSystemService(Context.INPUT_SERVICE) as InputManager
     }
 
     /**
      * Refresh the list of connected gamepads
      */
-    fun refreshConnectedGamepads() {
+    private fun refreshConnectedGamepads() {
         connectedGamepads.clear()
         val devices = InputDevice.getDeviceIds()
         for (id in devices) {
@@ -163,23 +161,23 @@ class GamepadManager(private val context: Context) {
         
         val lt = event.getAxisValue(MotionEvent.AXIS_BRAKE)
         if (lt != 0f) {
-            leftTrigger.value = lt
+            leftTrigger.floatValue = lt
         } else {
             
             val altLt = event.getAxisValue(MotionEvent.AXIS_LTRIGGER)
             if (altLt != 0f) {
-                leftTrigger.value = altLt
+                leftTrigger.floatValue = altLt
             }
         }
 
         val rt = event.getAxisValue(MotionEvent.AXIS_GAS)
         if (rt != 0f) {
-            rightTrigger.value = rt
+            rightTrigger.floatValue = rt
         } else {
             
             val altRt = event.getAxisValue(MotionEvent.AXIS_RTRIGGER)
             if (altRt != 0f) {
-                rightTrigger.value = altRt
+                rightTrigger.floatValue = altRt
             }
         }
 
@@ -200,11 +198,7 @@ class GamepadManager(private val context: Context) {
                 Log.d(TAG, "  Vendor ID: ${device.vendorId}, Product ID: ${device.productId}")
                 
                 val controllerNumber = device.controllerNumber
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    Log.d(TAG, "  Controller #: $controllerNumber, Descriptor: ${device.descriptor}")
-                } else {
-                    Log.d(TAG, "  Controller #: $controllerNumber")
-                }
+                Log.d(TAG, "  Controller #: $controllerNumber, Descriptor: ${device.descriptor}")
             }
         }
         Log.d(TAG, "================================")

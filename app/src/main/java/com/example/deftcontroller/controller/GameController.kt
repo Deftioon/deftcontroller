@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -102,8 +103,8 @@ class DefaultGameController : GameController {
     
     private val _leftStickState = mutableStateOf(Pair(0f, 0f))
     private val _rightStickState = mutableStateOf(Pair(0f, 0f))
-    private val _leftTriggerState = mutableStateOf(0f)
-    private val _rightTriggerState = mutableStateOf(0f)
+    private val _leftTriggerState = mutableFloatStateOf(0f)
+    private val _rightTriggerState = mutableFloatStateOf(0f)
     
     
     override val isButtonAPressed get() = buttonStates[KeyEvent.KEYCODE_BUTTON_A] ?: false
@@ -126,8 +127,8 @@ class DefaultGameController : GameController {
     override val leftStickY get() = _leftStickState.value.second
     override val rightStickX get() = _rightStickState.value.first
     override val rightStickY get() = _rightStickState.value.second
-    override val leftTrigger get() = _leftTriggerState.value
-    override val rightTrigger get() = _rightTriggerState.value
+    override val leftTrigger get() = _leftTriggerState.floatValue
+    override val rightTrigger get() = _rightTriggerState.floatValue
     
     
     private val buttonNames = mapOf(
@@ -238,8 +239,8 @@ class DefaultGameController : GameController {
             lt = applyDeadzone(event.getAxisValue(MotionEvent.AXIS_LTRIGGER), TRIGGER_DEADZONE)
         }
         
-        if (_leftTriggerState.value != lt) {
-            _leftTriggerState.value = lt
+        if (_leftTriggerState.floatValue != lt) {
+            _leftTriggerState.floatValue = lt
             
             
             scope.launch {
@@ -254,8 +255,8 @@ class DefaultGameController : GameController {
             rt = applyDeadzone(event.getAxisValue(MotionEvent.AXIS_RTRIGGER), TRIGGER_DEADZONE)
         }
         
-        if (_rightTriggerState.value != rt) {
-            _rightTriggerState.value = rt
+        if (_rightTriggerState.floatValue != rt) {
+            _rightTriggerState.floatValue = rt
             
             
             scope.launch {
@@ -273,8 +274,8 @@ class DefaultGameController : GameController {
         buttonStates.clear()
         _leftStickState.value = Pair(0f, 0f)
         _rightStickState.value = Pair(0f, 0f)
-        _leftTriggerState.value = 0f
-        _rightTriggerState.value = 0f
+        _leftTriggerState.floatValue = 0f
+        _rightTriggerState.floatValue = 0f
         _lastButtonName.value = null
     }
     
